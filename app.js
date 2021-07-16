@@ -6,6 +6,7 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const expressValidator = require("express-validator");
 require("dotenv").config();
+const {cloudinary}=require('./utils/cloudinary')
 // import routes
 const authRoutes = require("./routes/auth");
 const userRoutes = require("./routes/user");
@@ -26,10 +27,12 @@ mongoose
 
 // middlewares
 app.use(morgan("dev"));
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(expressValidator());
 app.use(cors());
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 
 // routes middleware
 app.use("/api", authRoutes);

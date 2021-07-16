@@ -1,45 +1,134 @@
 const mongoose = require("mongoose");
 const { ObjectId } = mongoose.Schema;
+// 
 
+
+// },
+// pics: [
+// 'https://res.cloudinary.com/dl5e2wsbh/image/upload/v1626018014/oferiko/gikfv4q6fpnffs8bnh3v.png',
+// 'https://res.cloudinary.com/dl5e2wsbh/video/upload/v1626018027/oferiko/otm6zvqvkhzhyw6wiszr.mp4'
+// ]
+// }
+
+// 
 const productSchema = new mongoose.Schema(
     {
-        name: {
+    
+    description: {
             type: String,
-            trim: true,
-            required: true,
-            maxlength: 32
-        },
-        description: {
-            type: String,
-            required: true,
-            maxlength: 2000
+            maxlength: 400
         },
         price: {
             type: Number,
-            trim: true,
-            required: true,
-            maxlength: 32
+            maxlength: 400,
+            min:100000
         },
-        category: {
-            type: ObjectId,
-            ref: "Category",
-            required: true
+        property_type:{
+            type: String
         },
-        quantity: {
+        property_condition:{
+            type: String
+        },
+        property_address_city:{
+            type: String
+        },
+        property_address_street:{
+            type: String
+        },
+        property_address_num:{
             type: Number
         },
-        sold: {
-            type: Number,
-            default: 0
+        property_floor:{
+            type: Number
         },
-        photo: {
-            data: Buffer,
-            contentType: String
+        property_total_floors:{
+            type: Number
         },
-        shipping: {
-            required: false,
+        num_of_rooms:{
+            type: Number
+        },
+        is_on_pillars:{
             type: Boolean
+        },
+        num_of_parking:{
+            type: Number
+        },
+        num_of_balcony:{
+            type: Number
+        },
+        build_mr:{
+            type: Number
+        },
+        build_mr_total:{
+            type: Number
+        },
+        contact_name:{
+            type: String
+        },
+        contact_number_start:{
+            type: String
+        },
+        contact_number:{
+            type: String
+        },
+        mail:{
+            type: String
+        },
+        Route:{
+            type: String
+        },
+        entry_date:{
+            type: Date
+        },
+        air_condition:{
+            type: Boolean
+        },
+        shelter:{
+            type: Boolean
+        },
+        garage:{
+            type: Boolean
+        },
+        pandor:{
+            type: Boolean
+        },
+        furniture:{
+            type: Boolean
+        },
+        handicapped:{
+            type: Boolean
+        },
+        elevator:{
+            type: Boolean
+        },
+        tadiran:{
+            type: Boolean
+        },
+        unit:{
+            type: Boolean
+        },
+        renovated:{
+            type: Boolean
+        },
+        kosher:{
+            type: Boolean
+        },
+        boiler:{
+            type: Boolean
+        },
+        bars:{
+            type: Boolean
+        },
+        pics:{
+            type:Array
+        },
+        pic1:{
+            type:String
+        },
+        pic2:{
+            type:String
         }
+
     },
     { timestamps: true }
 );
