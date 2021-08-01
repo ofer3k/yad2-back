@@ -128,6 +128,18 @@ const productSchema = new mongoose.Schema(
         pic2:{
             type:String
         }
+        ,pic3:{
+            type:String
+        }
+        ,pic4:{
+            type:String
+        }
+        ,pic5:{
+            type:String
+        }
+        ,pic6:{
+            type:String
+        }
 
     },
     { timestamps: true }

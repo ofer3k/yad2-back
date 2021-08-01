@@ -265,12 +265,7 @@ exports.listCategories = (req, res) => {
         }
     }
 
-    Product.find(findArgs)
-        .select("-photo")
-        .populate("category")
-        .sort([[sortBy, order]])
-        .skip(skip)
-        .limit(limit)
+    Product.find({})
         .exec((err, data) => {
             if (err) {
                 return res.status(400).json({
@@ -279,140 +274,84 @@ exports.listCategories = (req, res) => {
             }
             res.json({
                 size: data.length,
-                data
+                data,
             });
         });
 };
+exports.listByFilterNoSort=(req,res)=>{
+    let {num,filters,sortMethod}=req.body
+    if(num<4)
+    num=4
+    console.log(sortMethod,'sortMethod')
+    console.log(filters,'filters')
+    if(!filters)
+    filters={}
+    if(sortMethod==='priceHighToLow')
+    {
+        Product.find(filters).limit(num).sort( { price: -1 } )
+        .exec((err, data) => {
+            if (err) {
+                return res.status(400).json({
+                    error: "Products not found"
+                });
+            }
+            res.json({
+                size: data.length,
+                data,
+                FiltersAfterSearch:filters,
+                num:num+1,
+                sortMethod:'priceHighToLow'
+            });
+        });
+        return
+    }
+    if(sortMethod==='priceLowToHigh')
+    {
+        Product.find(filters).limit(num).sort( { price: 1 } )
+        .exec((err, data) => {
+            if (err) {
+                return res.status(400).json({
+                    error: "Products not found"
+                });
+            }
+            res.json({
+                size: data.length,
+                data,
+                FiltersAfterSearch:filters,
+                num:num+1,
+                sortMethod:'priceLowToHigh'
+            });
+        });
+        return
+    }
+    Product.find({}).limit(num)
+    .exec((err, data) => {
+        if (err) {
+            return res.status(400).json({
+                error: "Products not found"
+            });
+        }
+        res.json({
+            size: data.length,
+            data,
+            FiltersAfterSearch:filters,
+            num:num+1
+        });
+    });
+}
 
 
 exports.listByFilter = (req, res) => {
     console.log(req.body)
-    
-    // let order = req.body.order ? req.body.order : "desc";
-    // let sortBy = req.body.sortBy ? req.body.sortBy : "_id";
-    // let limit = req.body.limit ? parseInt(req.body.limit) : 100;
-    // let skip = parseInt(req.body.skip);
-//     let findArgs = {};
-//     console.log(req.body)
-//     // 
-//     entery_date: null,
-//     exclusively: null,
-//     name: '',
-//     description: '',
-//     price: '',
-//     categories: [],
-//     category: '',
-//     shipping: '',
-//     quantity: '',
-//     photo: '',
-//     loading: false,
-//     error: '',
-//     createdProduct: '',
-//     redirectToProfile: false,
-//     formData: '',
-//     property_type1: '',
-//     property_type2: '',
-//     property_type3: '',
-//     property_condition: '',
-//     property_address_city: '',
-//     property_address_street: '',
-//     property_address_num: null,
-//     property_floor: null,
-//     property_total_floors: null,
-//     num_of_rooms: null,
-//     min_num_of_rooms: null,
-//     max_num_of_rooms: null,
-//     min_num_of_floors: null,
-//     max_num_of_floors: null,
-//     min_price: null,
-//     max_price: null,
-//     min_mr: null,
-//     max_mr: null,
-//     is_on_pillars: null,
-//     num_of_parking: null,
-//     num_of_balcony: null,
-//     balcony: null,
-//     build_mr: null,
-//     build_mr_total: null,
-//     contact_name: '',
-//     contact_number_start: '',
-//     contact_number: '',
-//     mail: '',
-//     Route: null,//יש לברור בשביל הפרונט - באיזה צבע להציג את המודעה
-//   -  air_condition: false,
-//   -  shelter: false,
-//   -  garage: false,
-//   -  pandor: false,
-//   -  furniture: false,
-//   -  handicapped: false,
-//   -  elevator: false,
-//   -  tadiran: false,
-//   -  unit: false,
-//   -  renovated: false,
-//   -  kosher: false,
-//   -  boiler: false,
-//  -   bars: false
 
-    // 
-    // Route: "vip"
-    // air_condition: true
-    // bars: false
-    // boiler: true
-    // build_mr: "40"
-    // build_mr_total: "40"
-    // contact_name: "עופר קליין"
-    // contact_number: "6305081"
-    // contact_number_start: "052"
-    // createdAt: "2021-07-11T17:20:34.134Z"
-    // description: "מקום נעים וצעיר על שפת חוף גורדון השוקק"
-    // elevator: false
-    // entry_date: "2021-07-11"
-    // furniture: true
-    // garage: false
-    // handicapped: false
-    // is_on_pillars: true
-    // kosher: false
-    // mail: "ofer3klein@gmail.com"
-    // num_of_balcony: null
-    // num_of_parking: null
-    // num_of_rooms: null
-    // pandor: false
-    // pics: (2) ["https://res.cloudinary.com/dl5e2wsbh/image/upload/v1626023874/oferiko/q5b1qjxdsn1iw1mcu7lk.jpg", "https://res.cloudinary.com/dl5e2wsbh/video/upload/v1626023896/oferiko/qaqflvxm7auncmlb6wyg.mp4"]
-    // price: 4000000
-    // property_address_city: "תל אביב"
-    // property_address_num: "94"
-    // property_address_street: "בן יהודה"
-    // property_condition: "New from a contractor"
-    // property_floor: "2"
-    // property_total_floors: "3"
-    // property_type: "Private house"
-    // renovated: false
-    // shelter: false
-    // tadiran: true
-    // unit: false
-    // updatedAt: "2021-07-11T17:20:34.134Z"
-    // __v: 0
-    // _id: "60eb2862020f19816c44a863"
-    // // שדות לחיפוש
-    // const parsObj1={...req.body,
-    //     min_num_of_rooms:parseFloat(req.body.min_num_of_rooms),
-    //     max_num_of_rooms: parseFloat(req.body.max_num_of_rooms),
-    //     min_price: parseFloat(req.body.min_price),
-    //     max_price: parseFloat(req.body.max_price),
-    //     min_num_of_floors: parseFloat(req.body.min_num_of_floors),
-    //     max_floors: parseFloat(req.body.max_floors),
-    //     min_mr: parseFloat(req.body.min_mr),
-    //     max_mr: parseFloat(req.body.max_mr),
-    // }
 let filters={}
 let endFilters={}
-
 let booleanFilters={}
-    for(key in req.body){
+ 
+for(key in req.body){
                     if ( req.body[key] === true) {
                 booleanFilters={...booleanFilters,[key]:(req.body[key]) }
                 endFilters={...endFilters,[key]: {$eq: true}}
-                // db.users.find({is_agent: {$eq: true}})
             }
 
         if(req.body[key]!==null&&req.body[key]!==undefined&&req.body[key]!==NaN&&req.body[key].length>0&&req.body[key]!==false)
@@ -433,7 +372,6 @@ let booleanFilters={}
     {
         endFilters={...endFilters,num_of_rooms: { $lte: filters.max_num_of_rooms,$gte: filters. min_num_of_rooms }}
     }
-    // 
     if ('min_price' in filters   )
     {
         endFilters={...endFilters,price: { $gte: filters.min_price }}
@@ -445,8 +383,7 @@ let booleanFilters={}
     if ('max_price' in filters && 'min_price' in filters )
     {
         endFilters={...endFilters,price: { $lte: filters.max_price,$gte: filters.min_price }}
-    }
-    // 
+    } 
     if ('min_num_of_floors' in filters   )
     {
         endFilters={...endFilters,property_floor: { $gte: filters.min_num_of_floors }}
@@ -458,8 +395,7 @@ let booleanFilters={}
     if ('max_num_of_floors' in filters && 'min_num_of_floors' in filters )
     {
         endFilters={...endFilters,property_floor: { $lte: filters.max_num_of_floors,$gte: filters.min_num_of_floors }}
-    }
-    // 
+    } 
     if ('min_mr' in filters   )
     {
         endFilters={...endFilters,build_mr_total: { $gte: filters.min_mr }}
@@ -473,26 +409,8 @@ let booleanFilters={}
         endFilters={...endFilters,build_mr_total: { $lte: filters.max_mr,$gte: filters.min_mr }}
     }
     
-    // property_type: "Private house"
-    //  num_of_rooms: { $gte: min_num_of_rooms } 
-    //  num_of_rooms: { $lte: max_num_of_rooms } 
-    //  price: { $gte: min_price } 
-    // price: { $gte: max_price } 
-    // property_floor:{ $gte: min_num_of_floors }
-    // property_floor:{ $gte: max_num_of_floors }
-    // build_mr_total:{ $gte: min_mr }
-    // build_mr_total:{ $gte: max_mr }
-    // entery_date:{}
-    // entery_date:{ $gte : new ISODate("entry_date") }
-// let args={
-//     num_of_rooms: { $gte: parsObj1.min_num_of_rooms, $lte: parsObj1.max_num_of_rooms}, 
-//      price: { $gte: parsObj1.min_price,$lte: parsObj1.max_price }, 
-// }
-// console.log(args)
-// console.log(req.body)
-// res.json({a:'1'})
 console.log(endFilters)
-    Product.find(endFilters)
+    Product.find(endFilters).limit(3)
         .exec((err, data) => {
             if (err) {
                 return res.status(400).json({
@@ -501,7 +419,8 @@ console.log(endFilters)
             }
             res.json({
                 size: data.length,
-                data
+                data,
+                FiltersAfterSearch:endFilters
             });
         });
 };

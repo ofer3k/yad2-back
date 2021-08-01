@@ -19,7 +19,8 @@ const {
     listSearch,
     s3,
     uploadImage,
-    listByFilter
+    listByFilter,
+    listByFilterNoSort
 } = require("../controllers/product");
 const { requireSignin, isAuth, isAdmin } = require("../controllers/auth");
 const { userById } = require("../controllers/user");
@@ -81,6 +82,7 @@ router.get("/products/related/:productId", listRelated);
 router.get("/products/categories", listCategories);
 router.post("/products/by/search", listBySearch);
 router.post("/products/by/Filter", listByFilter);
+router.post("/products/by/Filter/noSort", listByFilterNoSort);
 router.get("/product/photo/:productId", photo);
 
 router.param("userId", userById);
