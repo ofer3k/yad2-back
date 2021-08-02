@@ -296,16 +296,27 @@ exports.listCategories = (req, res) => {
             });
         });
 };
-exports.listByFilterNoSort=(req,res)=>{
+exports.listByFilterNoSort=async(req,res)=>{
     let {num,filters,sortMethod}=req.body
     if(num<4)
     num=4
+    let fullLength=4
     console.log(sortMethod,'sortMethod')
     console.log(filters,'filters')
     if(!filters)
     filters={}
+
+    await Product.find(filters).count({}, function(error, numOfDocs) {
+        console.log('I have '+numOfDocs+' documents in my collection');
+        fullLength=numOfDocs
+    })
+
     if(sortMethod==='priceHighToLow')
     {
+        Product.find(filters).count({}, function(error, numOfDocs) {
+            console.log('I have '+numOfDocs+' documents in my collection');
+            fullLength=numOfDocs
+        });
         Product.find(filters).limit(num).sort( { price: -1 } )
         .exec((err, data) => {
             if (err) {
@@ -318,13 +329,15 @@ exports.listByFilterNoSort=(req,res)=>{
                 data,
                 FiltersAfterSearch:filters,
                 num:num+1,
-                sortMethod:'priceHighToLow'
+                sortMethod:'priceHighToLow',
+                fullLength
             });
         });
         return
     }
     if(sortMethod==='priceLowToHigh')
     {
+        
         Product.find(filters).limit(num).sort( { price: 1 } )
         .exec((err, data) => {
             if (err) {
@@ -337,11 +350,13 @@ exports.listByFilterNoSort=(req,res)=>{
                 data,
                 FiltersAfterSearch:filters,
                 num:num+1,
-                sortMethod:'priceLowToHigh'
+                sortMethod:'priceLowToHigh',
+                fullLength
             });
         });
         return
     }
+   
     Product.find(filters).limit(num)
     .exec((err, data) => {
         if (err) {
@@ -353,7 +368,8 @@ exports.listByFilterNoSort=(req,res)=>{
             size: data.length,
             data,
             FiltersAfterSearch:filters,
-            num:num+1
+            num:num+1,
+            fullLength
         });
     });
 }
