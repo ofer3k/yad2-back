@@ -140,6 +140,9 @@ const productSchema = new mongoose.Schema(
         ,pic6:{
             type:String
         }
+        ,userId:{
+            type:String
+        }
 
     },
     { timestamps: true }

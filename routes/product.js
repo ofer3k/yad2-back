@@ -20,7 +20,9 @@ const {
     s3,
     uploadImage,
     listByFilter,
-    listByFilterNoSort
+    listByFilterNoSort,
+    listByUser,
+    listOfProductsByUser
 } = require("../controllers/product");
 const { requireSignin, isAuth, isAdmin } = require("../controllers/auth");
 const { userById } = require("../controllers/user");
@@ -77,6 +79,7 @@ router.put(
 );
 
 router.get("/products", list);
+router.get("/products/by/user/:userId", listOfProductsByUser);
 router.get("/products/search", listSearch);
 router.get("/products/related/:productId", listRelated);
 router.get("/products/categories", listCategories);

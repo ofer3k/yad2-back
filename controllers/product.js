@@ -20,7 +20,10 @@ exports.productById = (req, res, next, id) => {
         });
 };
 
-
+exports.listByUser = (req, res) => {
+    req.product.photo = undefined;
+    return res.json(req.product);
+};
 exports.read = (req, res) => {
     req.product.photo = undefined;
     return res.json(req.product);
@@ -28,8 +31,9 @@ exports.read = (req, res) => {
 
 exports.create = (req, res) => {
     let form = new formidable.IncomingForm();
+    let userId=req.url.split('/')[3]
+    console.log(userId)
     form.keepExtensions = true;
- 
     form.parse(req, (err, fields, files)=>{
         const data=JSON.parse(fields.json)
         // console.log(data.fullForm)
@@ -48,7 +52,7 @@ exports.create = (req, res) => {
         }
 
         console.log('data',data)
-        let prod={...parsObj,...data.redioButtons,...data.pics}
+        let prod={...parsObj,...data.redioButtons,...data.pics,userId}
         let product = new Product(prod)
         product.save((err, result) => {
                     if (err) {
@@ -180,6 +184,20 @@ exports.update = (req, res) => {
  * by arrival = /products?sortBy=createdAt&order=desc&limit=4
  * if no params are sent, then all products are returned
  */
+exports.listOfProductsByUser=(req,res)=>{
+    let userId=req.url.split('/')[4]
+    // console.log(req.url.split('/')[4])
+    Product.find({userId})
+        .exec((err, products) => {
+            if (err) {
+                return res.status(400).json({
+                    error: "Products not found"
+                });
+            }
+            // console.log(products)
+            res.json(products);
+        });
+}
 
 exports.list = (req, res) => {
     let order = req.query.order ? req.query.order : "asc";
@@ -324,7 +342,7 @@ exports.listByFilterNoSort=(req,res)=>{
         });
         return
     }
-    Product.find({}).limit(num)
+    Product.find(filters).limit(num)
     .exec((err, data) => {
         if (err) {
             return res.status(400).json({
