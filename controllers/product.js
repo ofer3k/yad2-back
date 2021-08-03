@@ -443,6 +443,11 @@ for(key in req.body){
         endFilters={...endFilters,build_mr_total: { $lte: filters.max_mr,$gte: filters.min_mr }}
     }
     
+    if (req.body.property_address_city.length>0 )
+    {
+        endFilters={...endFilters,property_address_city : { '$regex' : req.body.property_address_city, '$options' : 'i' }}         
+    }
+    
 console.log(endFilters)
     Product.find(endFilters).limit(3)
         .exec((err, data) => {
