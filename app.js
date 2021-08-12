@@ -16,7 +16,6 @@ const productRoutes = require("./routes/product");
 // app
 const app = express();
 
-
 // db
 mongoose
     .connect(process.env.DATABASE, {
